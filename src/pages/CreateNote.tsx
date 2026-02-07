@@ -1,13 +1,16 @@
 import { useNavigate } from "react-router-dom";
 import { useNotes } from "@/contexts/NotesContext";
 import NoteForm from "@/components/NoteForm";
+import { toast } from "sonner";
+import { Subject } from "@/types/note";
 
 const CreateNote = () => {
   const navigate = useNavigate();
   const { addNote } = useNotes();
 
-  const handleSubmit = (title: string, content: string) => {
-    addNote(title, content);
+  const handleSubmit = (title: string, content: string, subject: Subject) => {
+    addNote(title, content, subject);
+    toast.success("Note created", { description: `"${title}" has been saved.` });
     navigate("/notes");
   };
 

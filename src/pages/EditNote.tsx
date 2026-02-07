@@ -1,7 +1,8 @@
 import { useParams, useNavigate, Link } from "react-router-dom";
 import { useNotes } from "@/contexts/NotesContext";
 import NoteForm from "@/components/NoteForm";
-import { ArrowLeft } from "lucide-react";
+import { toast } from "sonner";
+import { Subject } from "@/types/note";
 
 const EditNote = () => {
   const { id } = useParams<{ id: string }>();
@@ -14,9 +15,7 @@ const EditNote = () => {
     return (
       <div className="mx-auto max-w-2xl px-4 py-16 text-center animate-fade-in">
         <h2 className="font-display text-2xl font-bold text-foreground">Note not found</h2>
-        <p className="mt-2 text-muted-foreground">
-          This note may have been deleted.
-        </p>
+        <p className="mt-2 text-muted-foreground">This note may have been deleted.</p>
         <Link
           to="/notes"
           className="mt-6 inline-flex items-center gap-1.5 rounded-lg bg-primary px-5 py-2.5 text-sm font-medium text-primary-foreground transition-colors hover:bg-primary/90"
@@ -27,8 +26,9 @@ const EditNote = () => {
     );
   }
 
-  const handleSubmit = (title: string, content: string) => {
-    updateNote(note.id, title, content);
+  const handleSubmit = (title: string, content: string, subject: Subject) => {
+    updateNote(note.id, title, content, subject);
+    toast.success("Note updated", { description: `"${title}" has been saved.` });
     navigate(`/notes/${note.id}`);
   };
 
@@ -40,6 +40,7 @@ const EditNote = () => {
       <NoteForm
         initialTitle={note.title}
         initialContent={note.content}
+        initialSubject={note.subject}
         onSubmit={handleSubmit}
         submitLabel="Update Note"
       />
