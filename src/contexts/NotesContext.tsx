@@ -1,11 +1,11 @@
 import React, { createContext, useContext, useState, useCallback } from "react";
-import { Note } from "@/types/note";
+import { Note, Subject } from "@/types/note";
 import { mockNotes } from "@/data/mockNotes";
 
 interface NotesContextType {
   notes: Note[];
-  addNote: (title: string, content: string) => void;
-  updateNote: (id: string, title: string, content: string) => void;
+  addNote: (title: string, content: string, subject: Subject) => void;
+  updateNote: (id: string, title: string, content: string, subject: Subject) => void;
   deleteNote: (id: string) => void;
   getNoteById: (id: string) => Note | undefined;
 }
@@ -15,21 +15,22 @@ const NotesContext = createContext<NotesContextType | undefined>(undefined);
 export const NotesProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [notes, setNotes] = useState<Note[]>(mockNotes);
 
-  const addNote = useCallback((title: string, content: string) => {
+  const addNote = useCallback((title: string, content: string, subject: Subject) => {
     const newNote: Note = {
       id: crypto.randomUUID(),
       title,
       content,
+      subject,
       createdAt: new Date(),
       updatedAt: new Date(),
     };
     setNotes((prev) => [newNote, ...prev]);
   }, []);
 
-  const updateNote = useCallback((id: string, title: string, content: string) => {
+  const updateNote = useCallback((id: string, title: string, content: string, subject: Subject) => {
     setNotes((prev) =>
       prev.map((note) =>
-        note.id === id ? { ...note, title, content, updatedAt: new Date() } : note
+        note.id === id ? { ...note, title, content, subject, updatedAt: new Date() } : note
       )
     );
   }, []);
